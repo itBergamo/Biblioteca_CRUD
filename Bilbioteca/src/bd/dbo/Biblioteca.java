@@ -59,32 +59,32 @@ public class Biblioteca implements Cloneable {
 	
 	public int getId ()
 	{
-		return this.id;
+		return id;
 	}
 	
 	public String getNome ()
 	{
-		return this.nome;
+		return nome;
 	}
 	
 	public String getDescricao ()
 	{
-		return this.descricao;
+		return descricao;
 	}
 	
 	public int getCEP ()
 	{
-		return this.cep;
+		return cep;
 	}
 
 	public String getNumero ()
 	{
-		return this.numero;
+		return numero;
 	}
 	
 	public String getComplemento ()
 	{
-		return this.complemento;
+		return complemento;
 	}
 	
 	public Biblioteca (int id, String nome, String descricao, int cep, String numero, String complemento) throws Exception
@@ -109,8 +109,6 @@ public class Biblioteca implements Cloneable {
 		ret += "Complemento: " + this.complemento;
 		
 		return ret;
-	}
-	
-	//Add restante métodos obrigatórios
+	}	
 }
  
