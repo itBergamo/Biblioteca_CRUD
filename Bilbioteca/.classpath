@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/isabe/OneDrive/Documentos/DS59/Estrutura de Dados/Telegram Desktop/Aulas ASSÍNCRONAS ministradas/17) Material sobre acesso a BDs em programas feitos em Java/Demonstração com SQL Server/sqljdbc4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/isabe/Downloads/jackson-all-1.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
