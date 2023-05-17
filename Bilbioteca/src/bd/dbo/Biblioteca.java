@@ -22,6 +22,9 @@ public class Biblioteca implements Cloneable {
 		if (nome == null || nome.equals(""))
 			throw new Exception ("Digite um nome.");
 		
+		if (nome.length() > 400) 
+			throw new Exception("Nome muito grande.");
+		
 		this.nome = nome;
 	}
 	
@@ -35,7 +38,7 @@ public class Biblioteca implements Cloneable {
 	
 	public void setCEP (int cep) throws Exception
 	{
-		if (cep <= 0) 
+		if (String.valueOf(cep).length() != 8) 
 			throw new Exception("Número inválido");
 		
 		this.cep = cep;
@@ -43,6 +46,9 @@ public class Biblioteca implements Cloneable {
 	
 	public void setNumero (String numero) throws Exception
 	{
+		if (numero.length() > 5) 
+			throw new Exception("Valor inválido");
+		
 		if (numero == null || numero.equals(""))
 			throw new Exception ("Digite um numero, se não houver coloque --");
 		
@@ -109,6 +115,6 @@ public class Biblioteca implements Cloneable {
 		ret += "Complemento: " + this.complemento;
 		
 		return ret;
-	}	
+	}
 }
  

@@ -1,5 +1,7 @@
 package project;
 
+import java.awt.EventQueue;
+
 import project.template.*;
 
 public class Program {
@@ -18,5 +20,16 @@ public class Program {
         {
             System.err.println (erro.getMessage());
         }
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Tela window = new Tela();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
