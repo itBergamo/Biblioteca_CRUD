@@ -1,5 +1,6 @@
 package bd;
 
+import java.sql.DriverManager;
 import bd.core.*;
 
 public class BDSQLServer
@@ -15,12 +16,13 @@ public class BDSQLServer
             comando =
             new MeuPreparedStatement (
             "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-            "jdbc:sqlserver://127.0.0.1:1433;databasename=BD20676",
+            "jdbc:sqlserver://regulus.cotuca.unicamp.br:1433;databasename=BD20676",
             "BD20676", "BD20676");
+            System.out.println("FUNCIONOU!!");
         }
         catch (Exception erro)
         {
-            System.err.println ("Problemas de conexao com o BD");
+            System.err.println ("Problemas de conexao com o BD: " + erro);
             System.exit(0); //Abort program
         }
         

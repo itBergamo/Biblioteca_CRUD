@@ -1,16 +1,15 @@
 package bd.daos;
 
 import java.sql.*;
+import java.util.ArrayList;
 import bd.*;
 import bd.dbo.*;
 import bd.core.*;
 
 public class Bibliotecas {
 	
-	public static boolean cadastrado (int Id) throws Exception
-	{
-		boolean retorno = false;
-		
+	public static Biblioteca consulta (int Id) throws Exception
+	{		
 		try
 		{
 			String sql;
@@ -23,14 +22,22 @@ public class Bibliotecas {
 			
 			MeuResultSet resultado = (MeuResultSet)BDSQLServer.COMANDO.executeQuery();
 			
-			retorno = resultado.first();
+			resultado.first();
+			
+			Biblioteca biblioteca = new Biblioteca(resultado.getString("Nome"),
+					   resultado.getString("Descricao"),
+					   resultado.getInt   ("CEP"),
+					   resultado.getString("Numero"),
+					   resultado.getString("Complemento"));
+
+		biblioteca.setId(resultado.getInt("Id"));
+		
+		return biblioteca;
 		}
 		catch (SQLException erro)
 		{
 			throw new Exception ("Erro ao buscar biblioteca");
 		}
-		
-		return retorno;
 	}
 	
 	public static void create (Biblioteca biblioteca) throws Exception
@@ -43,18 +50,19 @@ public class Bibliotecas {
 			String sql;
 			
 			sql = "INSERT INTO Bibliotecas" +
-			"(Id, Nome, Descricao, CEP, Numero, Complemento)" +
+			"(Nome, Descricao, CEP, Numero, Complemento)" +
 			"VALUES" + 
-			"(?, ?, ?, ?, ?, ?)";
+			"(?, ?, ?, ?, ?)";
 			
 			BDSQLServer.COMANDO.prepareStatement(sql);
+		
+			System.out.println(sql);
 			
-			BDSQLServer.COMANDO.setInt   (1, biblioteca.getId());
-			BDSQLServer.COMANDO.setString(2, biblioteca.getNome());
-			BDSQLServer.COMANDO.setString(3, biblioteca.getDescricao());
-			BDSQLServer.COMANDO.setInt	 (4, biblioteca.getCEP());
-			BDSQLServer.COMANDO.setString(5, biblioteca.getNumero());
-			BDSQLServer.COMANDO.setString(6, biblioteca.getComplemento());
+			BDSQLServer.COMANDO.setString(1, biblioteca.getNome());
+			BDSQLServer.COMANDO.setString(2, biblioteca.getDescricao());
+			BDSQLServer.COMANDO.setInt	 (3, biblioteca.getCEP());
+			BDSQLServer.COMANDO.setString(4, biblioteca.getNumero());
+			BDSQLServer.COMANDO.setString(5, biblioteca.getComplemento());
 			
 			BDSQLServer.COMANDO.executeUpdate();
             BDSQLServer.COMANDO.commit();
@@ -62,86 +70,65 @@ public class Bibliotecas {
 		catch (SQLException erro)
         {
             BDSQLServer.COMANDO.rollback();
-            throw new Exception ("Erro ao incluir biblioteca.");
+            throw new Exception ("Erro ao incluir biblioteca. " + erro);
         }
 		
 	}
 	
-	public static Biblioteca read (int Id) throws Exception
+	public static ArrayList<Biblioteca> read () throws Exception
 	{
 		Biblioteca biblioteca= null;
+		ArrayList<Biblioteca> selecionadas = new ArrayList<Biblioteca>();
 		
 		try
-		{
-			String sql;
-			
-			sql = "SELECT * FROM Bibliotecas WHERE Id = ?";
-			
-			BDSQLServer.COMANDO.prepareStatement(sql);
-			
-			BDSQLServer.COMANDO.setInt(1, Id);
-				
-			MeuResultSet resultado = (MeuResultSet)BDSQLServer.COMANDO.executeQuery();
-			
-			if (!resultado.first())
-				throw new Exception ("Não cadastrado");
-			
-			biblioteca = new Biblioteca(resultado.getInt   ("Id"),
-									   resultado.getString("Nome"),
-									   resultado.getString("Descricao"),
-									   resultado.getInt   ("CEP"),
-									   resultado.getString("Numero"),
-									   resultado.getString("Complemento"));
-			
-		}
-		catch (SQLException erro)
-		{
-			throw new Exception ("Erro ao buscar biblioteca");
-		}
-		
-		return biblioteca;
-	}
-	
-	public static MeuResultSet readAll() throws Exception
-	{
-		MeuResultSet resultado = null;
-		
-		try 
 		{
 			String sql;
 			
 			sql = "SELECT * FROM Bibliotecas";
 			
 			BDSQLServer.COMANDO.prepareStatement(sql);
+							
+			MeuResultSet resultado = (MeuResultSet)BDSQLServer.COMANDO.executeQuery(); 
+			resultado.first();
+
+			while (!resultado.isAfterLast()) {
+					biblioteca = new Biblioteca(resultado.getString("Nome"),
+								   resultado.getString("Descricao"),
+								   resultado.getInt   ("CEP"),
+								   resultado.getString("Numero"),
+								   resultado.getString("Complemento"));
+		
+					biblioteca.setId(resultado.getInt("Id"));
 			
-			resultado = (MeuResultSet)BDSQLServer.COMANDO.executeQuery();
-		}
+					selecionadas.add(biblioteca);	
+					
+				resultado.next();
+			}
+	}
 		catch (SQLException erro)
 		{
-			throw new Exception ("Erro na recuperação das bibliotecas.");
+			throw new Exception ("Erro ao buscar biblioteca");
 		}
 		
-		return resultado;
+		return selecionadas;
 	}
 	
-	public static void update (Biblioteca biblioteca) throws Exception
+	
+	public void update (Biblioteca biblioteca) throws Exception
 	{
 		if (biblioteca == null)
 			throw new Exception ("Biblioteca não encontrada.");
-		
-		if (!cadastrado (biblioteca.getId()))
-			throw new Exception ("Não cadastrado.");
 		
 		try
 		{
 			String sql;
 			
 			sql = "UPDATE Bibliotecas " +
-				  "SET Nome = ? " + 
-				  "SET Descricao = ? " +
-				  "SET CEP = ? " + 
-				  "SET Numero = ? " + 
-				  "SET Complemento = ? " + 
+				  "SET Nome = ? , " + 
+				  "Descricao = ? , " +
+				  "CEP = ? , " + 
+				  "Numero = ? , " + 
+				  "Complemento = ? " + 
 				  "WHERE Id = ?";
 			
 			BDSQLServer.COMANDO.prepareStatement(sql);
@@ -159,15 +146,12 @@ public class Bibliotecas {
 		catch (SQLException erro)
 		{
 			BDSQLServer.COMANDO.rollback();
-            throw new Exception("Erro ao atualizar dados bilbioteca.");
+            throw new Exception("Erro ao atualizar dados bilbioteca." + erro);
 		}
 	}
 	
-	public static void delete (int Id) throws Exception
-	{
-		if (!cadastrado (Id))
-			throw new Exception ("Não cadastrado");
-		
+	public void delete (int Id) throws Exception
+	{		
 		try
 		{
 			String sql;

@@ -93,9 +93,8 @@ public class Biblioteca implements Cloneable {
 		return complemento;
 	}
 	
-	public Biblioteca (int id, String nome, String descricao, int cep, String numero, String complemento) throws Exception
+	public Biblioteca (String nome, String descricao, int cep, String numero, String complemento) throws Exception
 	{
-		this.setId		   (id);
 		this.setNome	   (nome);
 		this.setDescricao  (descricao);
 		this.setCEP		   (cep);
